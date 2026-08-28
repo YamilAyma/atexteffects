@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Copy, Check, Star, RotateCcw } from 'lucide-react';
+import { Copy, Check, Star, RotateCcw, Layers } from 'lucide-react';
 import { Effect } from '../types';
 import { EffectRenderer } from '../animations/renderer';
 import { useIntersection } from '../hooks/useIntersection';
@@ -17,6 +17,8 @@ interface EffectCardProps {
   onFocusStart?: (effectId: string) => void;
   onFocusEnd?: () => void;
   sampleText?: string;
+  isCompared?: boolean;
+  onToggleCompare?: (effectId: string) => void;
 }
 
 export const EffectCard: React.FC<EffectCardProps> = ({
@@ -32,6 +34,8 @@ export const EffectCard: React.FC<EffectCardProps> = ({
   onFocusStart,
   onFocusEnd,
   sampleText,
+  isCompared = false,
+  onToggleCompare,
 }) => {
   const { isVisible, elementRef } = useIntersection('150px');
   const [copied, setCopied] = useState(false);
@@ -70,6 +74,13 @@ export const EffectCard: React.FC<EffectCardProps> = ({
     onToggleFavorite(effect.id);
   };
 
+  const handleCompare = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onToggleCompare) {
+      onToggleCompare(effect.id);
+    }
+  };
+
   const handleReplay = (e: React.MouseEvent) => {
     e.stopPropagation();
     setReplayKey((k) => k + 1);
@@ -93,6 +104,8 @@ export const EffectCard: React.FC<EffectCardProps> = ({
       className={`group relative flex flex-col rounded-xl overflow-hidden transition-all duration-300 select-none cursor-pointer ${
         isFocused
           ? 'bg-[#111111] border-2 border-white shadow-[0_0_35px_rgba(255,255,255,0.18)] scale-[1.03] z-20 ring-4 ring-white/10'
+          : isCompared
+          ? 'bg-[#0E0E0E] border-2 border-white/80 shadow-[0_0_20px_rgba(255,255,255,0.1)]'
           : isDimmed
           ? 'bg-[#080808] border border-[#161616] opacity-25 grayscale-[40%] scale-[0.98] pointer-events-none'
           : 'bg-[#0C0C0C] border border-[#1E1E1E] hover:border-[#3A3A3A] hover:-translate-y-0.5'
@@ -104,6 +117,14 @@ export const EffectCard: React.FC<EffectCardProps> = ({
           Focus Mode
         </div>
       )}
+
+      {/* Compare Badge Indicator */}
+      {isCompared && (
+        <div className="absolute top-2 left-2 z-30 px-2 py-0.5 rounded bg-white text-black font-mono text-[10px] font-bold tracking-wider uppercase shadow-md">
+          Comparing
+        </div>
+      )}
+
       {/* 16:10 Preview Stage */}
       <div className="relative aspect-[16/10] w-full bg-[#050505] border-b border-[#1E1E1E] flex items-center justify-center p-4 overflow-hidden">
         {/* Animated preview */}
@@ -139,7 +160,7 @@ export const EffectCard: React.FC<EffectCardProps> = ({
         <div className="flex items-center justify-between gap-2 pt-1">
           {/* Tags */}
           <div className="flex flex-wrap items-center gap-1.5">
-            {effect.tags.slice(0, 3).map((tag) => (
+            {effect.tags.slice(0, 2).map((tag) => (
               <span
                 key={tag}
                 onClick={(e) => {
@@ -157,6 +178,21 @@ export const EffectCard: React.FC<EffectCardProps> = ({
 
           {/* Action buttons */}
           <div className="flex items-center gap-1.5 flex-shrink-0">
+            {/* Compare toggle button */}
+            {onToggleCompare && (
+              <button
+                onClick={handleCompare}
+                className={`p-1.5 rounded-md border transition-all cursor-pointer ${
+                  isCompared
+                    ? 'bg-white text-black border-white'
+                    : 'bg-[#121212] text-[#A1A1A1] border-[#1E1E1E] hover:border-[#3A3A3A] hover:text-white'
+                }`}
+                title={isCompared ? 'Remove from compare' : 'Compare effect (max 3)'}
+              >
+                <Layers className="w-3.5 h-3.5" />
+              </button>
+            )}
+
             {/* Copy prompt button */}
             <button
               onClick={handleCopy}
@@ -175,7 +211,7 @@ export const EffectCard: React.FC<EffectCardProps> = ({
               ) : (
                 <>
                   <Copy className="w-3 h-3 text-[#A1A1A1]" />
-                  <span>copy prompt</span>
+                  <span>copy</span>
                 </>
               )}
             </button>

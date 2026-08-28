@@ -17,10 +17,12 @@ import { Sidebar } from './components/Sidebar';
 import { MobileCategoryBar } from './components/MobileCategoryBar';
 import { EffectCard } from './components/EffectCard';
 import { EffectModal } from './components/EffectModal';
+import { CompareModal } from './components/CompareModal';
 import { Toast } from './components/Toast';
 import { ShortcutsModal } from './components/ShortcutsModal';
 import { EmptyState } from './components/EmptyState';
 import { Footer } from './components/Footer';
+import { Layers, X } from 'lucide-react';
 
 export default function App() {
   const { route, navigateCategory, navigateEffect } = useHashRoute();
@@ -33,6 +35,8 @@ export default function App() {
   const [shuffleSeed, setShuffleSeed] = useState<number | null>(null);
   const [selectedEffect, setSelectedEffect] = useState<Effect | null>(null);
   const [focusedEffectId, setFocusedEffectId] = useState<string | null>(null);
+  const [comparedEffectIds, setComparedEffectIds] = useState<string[]>([]);
+  const [isCompareOpen, setIsCompareOpen] = useState(false);
   const [toast, setToast] = useState<ToastInfo | null>(null);
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
 
@@ -54,6 +58,20 @@ export default function App() {
       const isNowFav = next.includes(id);
       showToast(isNowFav ? 'saved to favorites' : 'removed from favorites');
       return next;
+    });
+  }, []);
+
+  // Compare toggle
+  const toggleCompare = useCallback((id: string) => {
+    setComparedEffectIds((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((item) => item !== id);
+      }
+      if (prev.length >= 3) {
+        showToast('can compare maximum 3 effects at once', 'info');
+        return prev;
+      }
+      return [...prev, id];
     });
   }, []);
 
@@ -331,6 +349,8 @@ export default function App() {
                     isAnyFocused={focusedEffectId !== null}
                     onFocusStart={(id) => setFocusedEffectId(id)}
                     onFocusEnd={() => {}}
+                    isCompared={comparedEffectIds.includes(effect.id)}
+                    onToggleCompare={toggleCompare}
                   />
                 ))}
               </div>
@@ -346,6 +366,50 @@ export default function App() {
         shouldReduceMotion={shouldReduceMotion}
         onToggleMotion={() => setOverride(!shouldReduceMotion)}
         onShowToast={(msg) => showToast(msg)}
+      />
+
+      {/* Floating Comparator Bar when effects selected */}
+      {comparedEffectIds.length > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 px-4 py-2.5 bg-[#121212]/95 border border-[#333333] backdrop-blur-md rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.8)] animate-in fade-in slide-in-from-bottom-3 duration-200">
+          <div className="flex items-center gap-2">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+            <span className="text-xs font-semibold text-white">
+              {comparedEffectIds.length} effect{comparedEffectIds.length > 1 ? 's' : ''} selected
+            </span>
+          </div>
+
+          <div className="h-4 w-px bg-[#262626]" />
+
+          <button
+            onClick={() => setIsCompareOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full bg-white text-black hover:bg-[#E5E5E5] transition-all cursor-pointer shadow"
+          >
+            <Layers className="w-3.5 h-3.5" />
+            <span>open lab ({comparedEffectIds.length})</span>
+          </button>
+
+          <button
+            onClick={() => setComparedEffectIds([])}
+            className="p-1 rounded-full text-[#888888] hover:text-white hover:bg-[#1F1F1F] transition-colors cursor-pointer"
+            title="Clear compare selection"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
+      {/* Compare Modal */}
+      <CompareModal
+        isOpen={isCompareOpen}
+        onClose={() => setIsCompareOpen(false)}
+        effects={ALL_EFFECTS.filter((e) => comparedEffectIds.includes(e.id))}
+        onRemoveEffect={(id) => setComparedEffectIds((prev) => prev.filter((i) => i !== id))}
+        sampleText={customText}
+        onCustomTextChange={setCustomText}
+        shouldReduceMotion={shouldReduceMotion}
+        onCopyPrompt={handleCopyPrompt}
+        favorites={favorites}
+        onToggleFavorite={toggleFavorite}
       />
 
       {/* Modal View */}
