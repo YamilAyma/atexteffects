@@ -20,8 +20,6 @@ export const Footer: React.FC<FooterProps> = ({
   onShowToast,
 }) => {
   const [modalType, setModalType] = useState<FooterModalType>(null);
-  const [starCount, setStarCount] = useState(1248);
-  const [hasStarred, setHasStarred] = useState(false);
 
   const handleToast = (msg: string) => {
     if (onShowToast) {
@@ -34,16 +32,6 @@ export const Footer: React.FC<FooterProps> = ({
       onSelectCategory(category);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleStarClick = () => {
-    if (!hasStarred) {
-      setStarCount((prev) => prev + 1);
-      setHasStarred(true);
-      handleToast('Starred on GitHub! Thank you for the support ☆');
-    } else {
-      handleToast('Repository already starred ☆');
-    }
   };
 
   return (
@@ -60,7 +48,7 @@ export const Footer: React.FC<FooterProps> = ({
 
           {/* GitHub Circular Icon Button */}
           <a
-            href="https://github.com"
+            href="https://github.com/YamilAyma/atexteffects"
             target="_blank"
             rel="noopener noreferrer"
             title="View on GitHub"
@@ -143,7 +131,7 @@ export const Footer: React.FC<FooterProps> = ({
               privacy
             </button>
             <a
-              href="https://github.com"
+              href="https://github.com/YamilAyma/atexteffects"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-white transition-colors cursor-pointer"
@@ -159,22 +147,24 @@ export const Footer: React.FC<FooterProps> = ({
             <span className="text-[#A1A1A1]">v1.0.0</span>
             <span>•</span>
             <a
-              href="https://github.com"
+              href="https://github.com/YamilAyma/atexteffects"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-white transition-colors hover:underline"
             >
-              github.com/atexteffects/atexteffects
+              github.com/YamilAyma/atexteffects
             </a>
             <span>•</span>
-            <button
-              onClick={handleStarClick}
+            <a
+              href="https://github.com/YamilAyma/atexteffects/stargazers"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer group"
               title="Star on GitHub"
             >
-              <Star className={`w-3.5 h-3.5 ${hasStarred ? 'fill-yellow-400 text-yellow-400' : 'group-hover:text-yellow-400'}`} />
-              <span>{(starCount / 1000).toFixed(1)}k</span>
-            </button>
+              <Star className="w-3.5 h-3.5 text-yellow-400 group-hover:fill-yellow-400 transition-colors" />
+              <span>Sent a Star</span>
+            </a>
             <span>•</span>
             <div className="flex items-center gap-1.5 text-[#A1A1A1]">
               <CheckCircle className="w-3.5 h-3.5 text-emerald-500 inline-block" />

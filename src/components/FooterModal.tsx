@@ -253,10 +253,10 @@ export const FooterModal: React.FC<FooterModalProps> = ({ type, onClose, onShowT
         <div className="pt-3 border-t border-[#1E1E1E] flex items-center justify-between text-xs text-[#666666]">
           <span>atexteffects v1.0.0</span>
           <a
-            href="https://github.com"
+            href="https://github.com/YamilAyma/atexteffects"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 hover:text-white transition-colors"
+            className="flex items-center gap-1 text-white hover:underline cursor-pointer"
           >
             <span>GitHub repository</span>
             <ExternalLink className="w-3 h-3" />
