@@ -4,6 +4,7 @@
 
 <p align="center">
   <strong>A curated collection of animated text effects with agnostic prompts for any modern web stack or AI assistant.</strong>
+  Website: <a href="https://atexteffects.vercel.app">atexteffects.vercel.app</a>
 </p>
 
 <p align="center">
