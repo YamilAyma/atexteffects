@@ -31,6 +31,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [shuffleSeed, setShuffleSeed] = useState<number | null>(null);
   const [selectedEffect, setSelectedEffect] = useState<Effect | null>(null);
+  const [focusedEffectId, setFocusedEffectId] = useState<string | null>(null);
   const [toast, setToast] = useState<ToastInfo | null>(null);
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
 
@@ -166,6 +167,13 @@ export default function App() {
         return;
       }
 
+      if (e.key === 'Escape') {
+        if (focusedEffectId) {
+          setFocusedEffectId(null);
+        }
+        return;
+      }
+
       if (e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key === 'k')) {
         e.preventDefault();
         const searchInput = document.querySelector('input[type="text"]') as HTMLInputElement;
@@ -282,6 +290,16 @@ export default function App() {
                   copy all favorites ({filteredEffects.length})
                 </button>
               )}
+
+              {/* Focus mode exit action */}
+              {focusedEffectId && (
+                <button
+                  onClick={() => setFocusedEffectId(null)}
+                  className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-white/10 text-white hover:bg-white/20 border border-white/20 transition-all cursor-pointer shadow flex items-center gap-1.5"
+                >
+                  <span>exit focus mode (Esc)</span>
+                </button>
+              )}
             </div>
 
             {/* Effects Grid */}
@@ -304,6 +322,10 @@ export default function App() {
                     onOpenModal={handleOpenModal}
                     onTagClick={(tag) => setSearchQuery(tag)}
                     shouldReduceMotion={shouldReduceMotion}
+                    isFocused={focusedEffectId === effect.id}
+                    isAnyFocused={focusedEffectId !== null}
+                    onFocusStart={(id) => setFocusedEffectId(id)}
+                    onFocusEnd={() => {}}
                   />
                 ))}
               </div>

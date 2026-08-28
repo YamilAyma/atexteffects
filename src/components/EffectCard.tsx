@@ -12,6 +12,10 @@ interface EffectCardProps {
   onOpenModal: (effect: Effect) => void;
   onTagClick?: (tag: string) => void;
   shouldReduceMotion?: boolean;
+  isFocused?: boolean;
+  isAnyFocused?: boolean;
+  onFocusStart?: (effectId: string) => void;
+  onFocusEnd?: () => void;
 }
 
 export const EffectCard: React.FC<EffectCardProps> = ({
@@ -22,10 +26,35 @@ export const EffectCard: React.FC<EffectCardProps> = ({
   onOpenModal,
   onTagClick,
   shouldReduceMotion = false,
+  isFocused = false,
+  isAnyFocused = false,
+  onFocusStart,
+  onFocusEnd,
 }) => {
   const { isVisible, elementRef } = useIntersection('150px');
   const [copied, setCopied] = useState(false);
   const [replayKey, setReplayKey] = useState(0);
+  const pressTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isPressing, setIsPressing] = useState(false);
+
+  const startPress = () => {
+    if (!onFocusStart) return;
+    setIsPressing(true);
+    pressTimerRef.current = setTimeout(() => {
+      onFocusStart(effect.id);
+    }, 280);
+  };
+
+  const endPress = () => {
+    setIsPressing(false);
+    if (pressTimerRef.current) {
+      clearTimeout(pressTimerRef.current);
+      pressTimerRef.current = null;
+    }
+    if (onFocusEnd) {
+      onFocusEnd();
+    }
+  };
 
   const handleCopy = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -44,12 +73,35 @@ export const EffectCard: React.FC<EffectCardProps> = ({
     setReplayKey((k) => k + 1);
   };
 
+  const isDimmed = isAnyFocused && !isFocused;
+
   return (
     <div
       ref={elementRef}
-      onClick={() => onOpenModal(effect)}
-      className="group relative flex flex-col bg-[#0C0C0C] border border-[#1E1E1E] hover:border-[#3A3A3A] rounded-xl overflow-hidden transition-all duration-200 hover:-translate-y-0.5 cursor-pointer select-none"
+      onClick={() => {
+        if (!isFocused) {
+          onOpenModal(effect);
+        }
+      }}
+      onMouseDown={startPress}
+      onMouseUp={endPress}
+      onMouseLeave={endPress}
+      onTouchStart={startPress}
+      onTouchEnd={endPress}
+      className={`group relative flex flex-col rounded-xl overflow-hidden transition-all duration-300 select-none cursor-pointer ${
+        isFocused
+          ? 'bg-[#111111] border-2 border-white shadow-[0_0_35px_rgba(255,255,255,0.18)] scale-[1.03] z-20 ring-4 ring-white/10'
+          : isDimmed
+          ? 'bg-[#080808] border border-[#161616] opacity-25 grayscale-[40%] scale-[0.98] pointer-events-none'
+          : 'bg-[#0C0C0C] border border-[#1E1E1E] hover:border-[#3A3A3A] hover:-translate-y-0.5'
+      }`}
     >
+      {/* Focus Badge Indicator */}
+      {isFocused && (
+        <div className="absolute top-2 left-2 z-30 px-2 py-0.5 rounded bg-white text-black font-mono text-[10px] font-bold tracking-wider uppercase shadow-md animate-pulse">
+          Focus Mode
+        </div>
+      )}
       {/* 16:10 Preview Stage */}
       <div className="relative aspect-[16/10] w-full bg-[#050505] border-b border-[#1E1E1E] flex items-center justify-center p-4 overflow-hidden">
         {/* Animated preview */}

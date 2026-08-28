@@ -8,10 +8,11 @@ interface ShortcutsModalProps {
 
 const SHORTCUTS = [
   { key: '/', desc: 'focus search bar' },
-  { key: 'Esc', desc: 'close modal / clear search' },
+  { key: 'Esc', desc: 'close modal / clear search / exit focus' },
   { key: 's', desc: 'shuffle effects catalog' },
   { key: 'f', desc: 'toggle favorites view' },
   { key: 'a', desc: 'show all effects' },
+  { key: 'Hold Click', desc: 'focus mode (isolate single card preview)' },
   { key: 'c', desc: 'copy prompt of focused effect' },
   { key: 'r', desc: 'replay preview animation' },
   { key: '?', desc: 'open keyboard shortcuts' },
