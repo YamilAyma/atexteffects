@@ -23,6 +23,7 @@ import { ShortcutsModal } from './components/ShortcutsModal';
 import { EmptyState } from './components/EmptyState';
 import { Footer } from './components/Footer';
 import { Layers, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 export default function App() {
   const { route, navigateCategory, navigateEffect } = useHashRoute();
@@ -333,27 +334,46 @@ export default function App() {
                 onExploreAll={() => navigateCategory('all')}
               />
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-                {filteredEffects.map((effect) => (
-                  <EffectCard
-                    key={effect.id}
-                    effect={effect}
-                    sampleText={customText || undefined}
-                    isFavorite={favorites.includes(effect.id)}
-                    onToggleFavorite={toggleFavorite}
-                    onCopyPrompt={handleCopyPrompt}
-                    onOpenModal={handleOpenModal}
-                    onTagClick={(tag) => setSearchQuery(tag)}
-                    shouldReduceMotion={shouldReduceMotion}
-                    isFocused={focusedEffectId === effect.id}
-                    isAnyFocused={focusedEffectId !== null}
-                    onFocusStart={(id) => setFocusedEffectId(id)}
-                    onFocusEnd={() => {}}
-                    isCompared={comparedEffectIds.includes(effect.id)}
-                    onToggleCompare={toggleCompare}
-                  />
-                ))}
-              </div>
+              <motion.div
+                layout={!shouldReduceMotion}
+                className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5"
+              >
+                <AnimatePresence mode="popLayout">
+                  {filteredEffects.map((effect) => (
+                    <motion.div
+                      key={effect.id}
+                      layout={!shouldReduceMotion}
+                      initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.92, y: 15 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.9, transition: { duration: 0.15 } }}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 350,
+                        damping: 28,
+                        mass: 0.8,
+                      }}
+                      className="h-full"
+                    >
+                      <EffectCard
+                        effect={effect}
+                        sampleText={customText || undefined}
+                        isFavorite={favorites.includes(effect.id)}
+                        onToggleFavorite={toggleFavorite}
+                        onCopyPrompt={handleCopyPrompt}
+                        onOpenModal={handleOpenModal}
+                        onTagClick={(tag) => setSearchQuery(tag)}
+                        shouldReduceMotion={shouldReduceMotion}
+                        isFocused={focusedEffectId === effect.id}
+                        isAnyFocused={focusedEffectId !== null}
+                        onFocusStart={(id) => setFocusedEffectId(id)}
+                        onFocusEnd={() => {}}
+                        isCompared={comparedEffectIds.includes(effect.id)}
+                        onToggleCompare={toggleCompare}
+                      />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </motion.div>
             )}
           </div>
         </main>
