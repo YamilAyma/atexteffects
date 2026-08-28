@@ -15,6 +15,7 @@ import { useReducedMotion } from './hooks/useReducedMotion';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { MobileCategoryBar } from './components/MobileCategoryBar';
+import { HeroBanner } from './components/HeroBanner';
 import { EffectCard } from './components/EffectCard';
 import { EffectModal } from './components/EffectModal';
 import { CompareModal } from './components/CompareModal';
@@ -280,6 +281,11 @@ export default function App() {
         {/* Content Area */}
         <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 flex flex-col justify-between">
           <div className="max-w-7xl w-full mx-auto space-y-6">
+            {/* Direct Hero Banner image on main view */}
+            {route.category === 'all' && !searchQuery && (
+              <HeroBanner />
+            )}
+
             {/* Section Header */}
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-[#1E1E1E]">
               <div>
