@@ -29,6 +29,7 @@ export default function App() {
   // State
   const [favorites, setFavorites] = useState<string[]>(getStoredFavorites);
   const [searchQuery, setSearchQuery] = useState('');
+  const [customText, setCustomText] = useState('');
   const [shuffleSeed, setShuffleSeed] = useState<number | null>(null);
   const [selectedEffect, setSelectedEffect] = useState<Effect | null>(null);
   const [focusedEffectId, setFocusedEffectId] = useState<string | null>(null);
@@ -213,6 +214,8 @@ export default function App() {
       <Header
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        customText={customText}
+        onCustomTextChange={setCustomText}
         onShuffle={handleShuffle}
         favoritesCount={favorites.length}
         isFavoritesView={route.category === 'favorites'}
@@ -221,6 +224,7 @@ export default function App() {
         }
         onResetView={() => {
           setSearchQuery('');
+          setCustomText('');
           setShuffleSeed(null);
           navigateCategory('all');
         }}
@@ -316,6 +320,7 @@ export default function App() {
                   <EffectCard
                     key={effect.id}
                     effect={effect}
+                    sampleText={customText || undefined}
                     isFavorite={favorites.includes(effect.id)}
                     onToggleFavorite={toggleFavorite}
                     onCopyPrompt={handleCopyPrompt}
@@ -346,6 +351,7 @@ export default function App() {
       {/* Modal View */}
       <EffectModal
         effect={selectedEffect}
+        sampleText={customText || undefined}
         isOpen={Boolean(selectedEffect)}
         onClose={handleCloseModal}
         isFavorite={Boolean(selectedEffect && favorites.includes(selectedEffect.id))}

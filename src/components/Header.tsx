@@ -4,6 +4,8 @@ import { Search, Shuffle, Star, X } from 'lucide-react';
 interface HeaderProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  customText: string;
+  onCustomTextChange: (text: string) => void;
   onShuffle: () => void;
   favoritesCount: number;
   isFavoritesView: boolean;
@@ -14,6 +16,8 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   searchQuery,
   onSearchChange,
+  customText,
+  onCustomTextChange,
   onShuffle,
   favoritesCount,
   isFavoritesView,
@@ -21,6 +25,7 @@ export const Header: React.FC<HeaderProps> = ({
   onResetView,
 }) => {
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const customTextInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <header className="sticky top-0 z-30 h-16 bg-[#050505] border-b border-[#1E1E1E] px-4 sm:px-6 flex items-center justify-between gap-4">
@@ -36,17 +41,18 @@ export const Header: React.FC<HeaderProps> = ({
         </button>
       </div>
 
-      {/* Center Search Input */}
-      <div className="flex-1 max-w-md mx-auto relative">
-        <div className="relative flex items-center">
+      {/* Center Search & Custom Text Controls */}
+      <div className="flex-1 max-w-2xl mx-auto flex items-center gap-2.5">
+        {/* Search Input */}
+        <div className="relative flex-1 flex items-center">
           <Search className="absolute left-3.5 w-4 h-4 text-[#5C5C5C] pointer-events-none" />
           <input
             ref={searchInputRef}
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="search effects, categories, tags..."
-            className="w-full h-9 pl-9 pr-16 bg-[#0C0C0C] border border-[#1E1E1E] hover:border-[#3A3A3A] focus:border-[#3A3A3A] focus:outline-none rounded-md text-xs sm:text-sm text-[#F5F5F5] placeholder-[#5C5C5C] transition-all"
+            placeholder="search effects, tags..."
+            className="w-full h-9 pl-9 pr-14 bg-[#0C0C0C] border border-[#1E1E1E] hover:border-[#3A3A3A] focus:border-[#3A3A3A] focus:outline-none rounded-md text-xs sm:text-sm text-[#F5F5F5] placeholder-[#5C5C5C] transition-all"
           />
           {searchQuery ? (
             <button
@@ -54,7 +60,7 @@ export const Header: React.FC<HeaderProps> = ({
                 onSearchChange('');
                 searchInputRef.current?.focus();
               }}
-              className="absolute right-2.5 p-1 text-[#5C5C5C] hover:text-[#F5F5F5] transition-colors"
+              className="absolute right-2.5 p-1 text-[#5C5C5C] hover:text-[#F5F5F5] transition-colors cursor-pointer"
               title="Clear search (Esc)"
             >
               <X className="w-3.5 h-3.5" />
@@ -63,6 +69,32 @@ export const Header: React.FC<HeaderProps> = ({
             <kbd className="absolute right-2.5 px-1.5 py-0.5 text-[10px] font-mono text-[#5C5C5C] bg-[#161616] border border-[#1E1E1E] rounded pointer-events-none">
               ⌘K
             </kbd>
+          )}
+        </div>
+
+        {/* Global Live Sample Text Input */}
+        <div className="relative hidden md:flex items-center w-52 shrink-0">
+          <input
+            ref={customTextInputRef}
+            type="text"
+            value={customText}
+            onChange={(e) => onCustomTextChange(e.target.value)}
+            placeholder="custom text..."
+            maxLength={24}
+            className="w-full h-9 pl-3 pr-8 bg-[#0C0C0C] border border-[#1E1E1E] hover:border-[#3A3A3A] focus:border-[#3A3A3A] focus:outline-none rounded-md text-xs sm:text-sm text-[#F5F5F5] placeholder-[#5C5C5C] transition-all font-mono"
+          />
+          {customText ? (
+            <button
+              onClick={() => onCustomTextChange('')}
+              className="absolute right-2 p-1 text-[#5C5C5C] hover:text-[#F5F5F5] transition-colors cursor-pointer"
+              title="Reset to default text"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          ) : (
+            <span className="absolute right-2 text-[10px] font-mono text-[#444444] pointer-events-none uppercase">
+              preview
+            </span>
           )}
         </div>
       </div>

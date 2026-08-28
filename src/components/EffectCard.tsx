@@ -16,6 +16,7 @@ interface EffectCardProps {
   isAnyFocused?: boolean;
   onFocusStart?: (effectId: string) => void;
   onFocusEnd?: () => void;
+  sampleText?: string;
 }
 
 export const EffectCard: React.FC<EffectCardProps> = ({
@@ -30,6 +31,7 @@ export const EffectCard: React.FC<EffectCardProps> = ({
   isAnyFocused = false,
   onFocusStart,
   onFocusEnd,
+  sampleText,
 }) => {
   const { isVisible, elementRef } = useIntersection('150px');
   const [copied, setCopied] = useState(false);
@@ -107,6 +109,7 @@ export const EffectCard: React.FC<EffectCardProps> = ({
         {/* Animated preview */}
         <EffectRenderer
           effect={effect}
+          sampleText={sampleText}
           replayKey={replayKey}
           isPlaying={isVisible && !shouldReduceMotion}
         />

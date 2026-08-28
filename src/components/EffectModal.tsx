@@ -21,6 +21,7 @@ interface EffectModalProps {
   onCopyWithDetails: (effect: Effect) => void;
   onCopyPermalink: (effect: Effect) => void;
   shouldReduceMotion?: boolean;
+  sampleText?: string;
 }
 
 export const EffectModal: React.FC<EffectModalProps> = ({
@@ -33,6 +34,7 @@ export const EffectModal: React.FC<EffectModalProps> = ({
   onCopyWithDetails,
   onCopyPermalink,
   shouldReduceMotion = false,
+  sampleText,
 }) => {
   const [copiedPrompt, setCopiedPrompt] = useState(false);
   const [copiedDetails, setCopiedDetails] = useState(false);
@@ -114,6 +116,7 @@ export const EffectModal: React.FC<EffectModalProps> = ({
           <div className="relative aspect-video w-full rounded-xl bg-[#050505] border border-[#1E1E1E] flex items-center justify-center p-6 overflow-hidden">
             <EffectRenderer
               effect={effect}
+              sampleText={sampleText}
               isModal={true}
               replayKey={replayKey}
               isPlaying={!shouldReduceMotion}
