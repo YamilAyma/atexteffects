@@ -74,7 +74,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {/* 10 Category items */}
             {CATEGORIES.map((category) => {
               const isActive = activeCategory === category.id;
-              const count = categoryCounts[category.id] || 7;
+              const count = categoryCounts[category.id] ?? 0;
               const icon = ICON_MAP[category.icon] || <Sparkles className="w-4 h-4" />;
 
               return (
@@ -124,7 +124,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="p-3.5 rounded-lg bg-[#050505] border border-[#1E1E1E]">
           <div className="flex items-center gap-2 text-[#F5F5F5] mb-2">
             <Code2 className="w-4 h-4 text-white" />
-            <span className="text-xs font-semibold">70 animated text effects</span>
+            <span className="text-xs font-semibold">{totalEffectsCount} animated text effects</span>
           </div>
           <p className="text-[11px] text-[#A1A1A1] leading-relaxed">
             copy the prompt. generate.

@@ -253,6 +253,8 @@ export default function App() {
       {/* Mobile Category Bar */}
       <MobileCategoryBar
         activeCategory={route.category}
+        totalEffectsCount={ALL_EFFECTS.length}
+        categoryCounts={categoryCounts}
         onSelectCategory={(catId) => {
           setSearchQuery('');
           navigateCategory(catId);
@@ -303,7 +305,7 @@ export default function App() {
                 </div>
                 <p className="text-xs sm:text-sm text-[#A1A1A1] mt-1">
                   {route.category === 'all'
-                    ? '70 curated animated text effects with agnostic prompts for any stack'
+                    ? `${ALL_EFFECTS.length} curated animated text effects with agnostic prompts for any stack`
                     : route.category === 'favorites'
                     ? 'your saved personal typography inspiration collection'
                     : activeCategoryObj?.description || 'curated animation specimens'}

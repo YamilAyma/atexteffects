@@ -1,4 +1,6 @@
 import React from 'react';
+import { ALL_EFFECTS } from '../data/effects';
+import { CATEGORIES } from '../data/categories';
 import { X, Copy, ExternalLink, Check, Mail, Send, Terminal, Shield, FileText, Sparkles, BookOpen } from 'lucide-react';
 
 export type FooterModalType = 'docs' | 'about' | 'changelog' | 'license' | 'privacy' | 'contact' | null;
@@ -81,7 +83,7 @@ export const FooterModal: React.FC<FooterModalProps> = ({ type, onClose, onShowT
             <div className="space-y-4">
               <p>
                 <strong className="text-white">atexteffects</strong> is an implementation-agnostic
-                repository of 110 animated typography techniques. Every specimen includes a formal
+                repository of {ALL_EFFECTS.length} animated typography techniques. Every specimen includes a formal
                 prompt engineered to generate code in any stack: React, Tailwind CSS, Framer Motion,
                 GSAP, WebGL, Canvas 2D, or pure CSS.
               </p>
@@ -124,11 +126,11 @@ export const FooterModal: React.FC<FooterModalProps> = ({ type, onClose, onShowT
               </p>
               <div className="grid grid-cols-2 gap-3 pt-2">
                 <div className="p-3 bg-[#141414] border border-[#222222] rounded-lg">
-                  <div className="text-xl font-bold text-white">110</div>
+                  <div className="text-xl font-bold text-white">{ALL_EFFECTS.length}</div>
                   <div className="text-xs text-[#888888]">Curated Effects</div>
                 </div>
                 <div className="p-3 bg-[#141414] border border-[#222222] rounded-lg">
-                  <div className="text-xl font-bold text-white">10</div>
+                  <div className="text-xl font-bold text-white">{CATEGORIES.length}</div>
                   <div className="text-xs text-[#888888]">Animation Categories</div>
                 </div>
                 <div className="p-3 bg-[#141414] border border-[#222222] rounded-lg">

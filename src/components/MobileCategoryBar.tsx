@@ -3,6 +3,8 @@ import { CATEGORIES } from '../data/categories';
 
 interface MobileCategoryBarProps {
   activeCategory: string;
+  totalEffectsCount: number;
+  categoryCounts: Record<string, number>;
   onSelectCategory: (catId: string) => void;
   favoritesCount: number;
   onSelectFavorites: () => void;
@@ -10,6 +12,8 @@ interface MobileCategoryBarProps {
 
 export const MobileCategoryBar: React.FC<MobileCategoryBarProps> = ({
   activeCategory,
+  totalEffectsCount,
+  categoryCounts,
   onSelectCategory,
   favoritesCount,
   onSelectFavorites,
@@ -24,7 +28,7 @@ export const MobileCategoryBar: React.FC<MobileCategoryBarProps> = ({
             : 'bg-[#161616] text-[#A1A1A1] hover:text-white border border-[#1E1E1E]'
         }`}
       >
-        all (70)
+        all ({totalEffectsCount})
       </button>
 
       {CATEGORIES.map((cat) => (
@@ -37,7 +41,7 @@ export const MobileCategoryBar: React.FC<MobileCategoryBarProps> = ({
               : 'bg-[#161616] text-[#A1A1A1] hover:text-white border border-[#1E1E1E]'
           }`}
         >
-          {cat.name} (7)
+          {cat.name} ({categoryCounts[cat.id] ?? 0})
         </button>
       ))}
 

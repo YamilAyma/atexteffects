@@ -23,11 +23,6 @@ export const ALL_EFFECTS: Effect[] = [
   ...AMBIENT_EFFECTS,
 ];
 
-// Verify 110 items
-if (ALL_EFFECTS.length !== 110) {
-  console.warn(`Expected 110 effects, found ${ALL_EFFECTS.length}`);
-}
-
 export const EFFECTS_MAP = new Map<string, Effect>(
   ALL_EFFECTS.map((eff) => [eff.id, eff])
 );
